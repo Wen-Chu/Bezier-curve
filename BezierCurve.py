@@ -1,15 +1,6 @@
 import tkinter as tk
 
-win = tk.Tk()
-win.title('Bezier Curve')
-win.geometry('600x600')
-Beziercanvas = tk.Canvas(win, width=600, height=600)
-Beziercanvas.pack()
-rectangle = []
-pointList = []
-bezierCurve = []
-
-def BezierCurve(t, point, xu, yu): #計算貝茲曲線
+def BezierCurve(t, point, xu, yu): # Calculate Bezier Curve
     if round(xu, 5) == point[3][0] and round(yu, 5) == point[3][1]:
        Beziercanvas.create_line(bezierCurve, tag='line', width=2)
     else:
@@ -18,8 +9,8 @@ def BezierCurve(t, point, xu, yu): #計算貝茲曲線
         bezierCurve.append((xu, yu))
         BezierCurve(t+0.002, point, xu, yu)
 
-def moveFunc(event, rec): #移動任一點時，重新計算呼叫方法計算貝茲曲線
-    if (len(rectangle) < 4):
+def moveFunc(event, rec): # when any point is moved, recalculate the Bezier Curve
+    if len(rectangle) < 4:
         return
     bezierCurve.clear()
     Beziercanvas.delete("line")
@@ -29,14 +20,22 @@ def moveFunc(event, rec): #移動任一點時，重新計算呼叫方法計算�
     bezierCurve.append((pointList[0][0], pointList[0][1]))
     BezierCurve(0.0, pointList, pointList[0][0], pointList[0][1])
 
-def createRectangle(event): #點擊畫面時產生貝茲曲線的點（可新增到四個）
-    if(len(rectangle) < 4):
+def createRectangle(event): # When click the canvas, create a point (most 4 points)
+    if len(rectangle) < 4:
         item = Beziercanvas.create_rectangle(event.x-5, event.y-5, event.x+5, event.y+5, fill='white')
         rectangle.append(item)
         pointList.append([event.x, event.y])
         Beziercanvas.tag_bind(item, "<B1-Motion>", lambda event: moveFunc(event, item))
-        if(len(rectangle) == 4):
+        if len(rectangle) == 4:
             BezierCurve(0.0, pointList, pointList[0][0], pointList[0][1])
-
-Beziercanvas.bind("<Button-1>", createRectangle)
-win.mainloop()
+if __name__ == '__main__':
+    win = tk.Tk()
+    win.title('Bezier Curve')
+    win.geometry('600x600')
+    Beziercanvas = tk.Canvas(win, width=600, height=600)
+    Beziercanvas.pack()
+    rectangle = []
+    pointList = []
+    bezierCurve = []
+    Beziercanvas.bind("<Button-1>", createRectangle)
+    win.mainloop()
